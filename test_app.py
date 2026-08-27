@@ -1,4 +1,4 @@
-﻿import unittest
+import unittest
 from app import app, db, Students
 
 class StudentAppTestCase(unittest.TestCase):
@@ -12,6 +12,7 @@ class StudentAppTestCase(unittest.TestCase):
         html = response.get_data(as_text=True)
         self.assertIn('<th>Phone</th>', html)
         self.assertIn('Hassan Ali', html)
+        self.assertIn('croqu024', html)
         print('test_show_all_screen passed.')
 
     def test_new_student_screen(self):
@@ -20,6 +21,7 @@ class StudentAppTestCase(unittest.TestCase):
         html = response.get_data(as_text=True)
         self.assertIn('Phone Number:', html)
         self.assertIn('name="phone"', html)
+        self.assertIn('croqu024', html)
         print('test_new_student_screen passed.')
 
     def test_create_new_student_with_phone(self):
