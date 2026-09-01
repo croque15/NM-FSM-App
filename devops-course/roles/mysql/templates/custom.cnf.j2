@@ -1,0 +1,10 @@
+[mysqld]
+port = {{ mysql_port }}
+bind-address = {{ mysql_bind_address }}
+datadir = {{ mysql_datadir }}
+socket = {{ mysql_socket | default('/var/lib/mysql/mysql.sock') }}
+lower_case_table_names = 1
+mysql-native-password = ON
+
+[client]
+socket = {{ mysql_socket | default('/var/lib/mysql/mysql.sock') }}

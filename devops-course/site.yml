@@ -1,0 +1,8 @@
+---
+- name: Configure MySQL Database Servers
+  hosts: dbservers
+  become: true
+  vars_files:
+    - vault.yml
+  roles:
+    - mysql

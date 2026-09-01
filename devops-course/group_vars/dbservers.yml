@@ -1,0 +1,8 @@
+---
+mysql_port: 3306
+mysql_bind_address: "0.0.0.0"
+mysql_datadir: /mnt/mysql-data
+mysql_app_user: flaskapp
+mysql_db_name: fsm_db
+mysql_app_password: "{{ mysql_app_password }}"
+mysql_root_password: "{{ mysql_root_password }}"
