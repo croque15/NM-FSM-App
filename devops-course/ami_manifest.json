@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "name": "mysql",
+      "builder_type": "amazon-ebs",
+      "build_time": 1790540867,
+      "files": null,
+      "artifact_id": "us-east-1:ami-0606af8363d933df6",
+      "packer_run_uuid": "56378e24-c525-a869-a7a7-ebb218602d69",
+      "custom_data": null
+    }
+  ],
+  "last_run_uuid": "56378e24-c525-a869-a7a7-ebb218602d69"
+}
