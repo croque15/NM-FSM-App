@@ -1,5 +1,3 @@
-# Virtual environments
-venv/
 .venv/
 env/
 ENV/
@@ -14,8 +12,29 @@ instance/
 *.sqlite3
 *.db
 
-# Ansible Vault password files (NEVER commit vault passwords)
-.ansible_vault_pass
-*.vault_pass
-vault_pass*
+# Secrets & Credentials
+.env
+.env.local
+*vault*
+secrets/
+*.pem
+*.key
 
+# Editor swap files & backups
+*.swp
+*~
+.DS_Store
+
+# Terraform
+**/.terraform/
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+tfplan*
+*.bin
+
+# Archives & Packages
+*.zip
+*.tar.gz
