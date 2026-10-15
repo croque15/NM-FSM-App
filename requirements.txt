@@ -3,6 +3,8 @@ click==8.1.7
 colorama==0.4.6
 Flask==3.1.0
 Flask-SQLAlchemy==3.1.1
+PyMySQL>=1.1.0 # MySQL driver
+gunicorn>=21.2.0 # WSGI server
 greenlet>=3.1.1
 itsdangerous==2.2.0
 Jinja2==3.1.4
