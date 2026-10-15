@@ -30,7 +30,6 @@ secrets/
 **/.terraform/*
 *.tfstate
 *.tfstate.*
-*.tfvars
 *.tfvars.json
 tfplan*
 *.bin
