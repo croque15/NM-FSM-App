@@ -23,25 +23,26 @@ pipeline {
                 }
             }
         }
-        // Stage 2: Unit and HTTP Tests
+
+        // ── Stage 2: Unit and HTTP Tests ───────────────────────────────────
         stage('Unit and HTTP Tests') {
             steps {
                 sh 'PYTHONPATH=$WORKSPACE pytest tests/unit/ tests/http/ -v'
             }
         }
-        // Stage 3: Checkov IaC Security Scan
+
+        // ── Stage 3: Checkov IaC Security Scan ─────────────────────────────
         stage('IaC Scan with Checkov') {
             steps {
-                    sh '''
-                        checkov -d "$WORKSPACE/devops-course/terraform" \
-                            --quiet \
-                            --compact \
-                            --framework terraform \
-                            --skip-check
-                            CKV_AWS_126,CKV_AWS_135,CKV_AWS_79,CKV_AWS_8,CKV_AWS_3,CKV_AWS_189,CKV2_AWS_2,CKV_AWS_163,CKV_AWS_51,CKV_AWS_136,CKV_AWS_333,CKV_AWS_158,CKV_AWS_338,CKV_AWS_23,CKV_AWS_382,CKV_AWS_65,CKV_AWS_272,CKV_AWS_116,CKV_AWS_115,CKV_AWS_117,CKV_AWS_50 \
-                            -o json > checkov-report.json
-                    '''
-                }
+                sh '''
+                    checkov -d "$WORKSPACE/devops-course/terraform" \
+                        --quiet \
+                        --compact \
+                        --framework terraform \
+                        --skip-check \
+                        CKV_AWS_126,CKV_AWS_135,CKV_AWS_79,CKV_AWS_8,CKV_AWS_3,CKV_AWS_189,CKV2_AWS_2,CKV_AWS_163,CKV_AWS_51,CKV_AWS_136,CKV_AWS_333,CKV_AWS_158,CKV_AWS_338,CKV_AWS_23,CKV_AWS_382,CKV_AWS_65,CKV_AWS_272,CKV_AWS_116,CKV_AWS_115,CKV_AWS_117,CKV_AWS_50 \
+                        -o json > checkov-report.json
+                '''
             }
             post {
                 always {
@@ -49,7 +50,8 @@ pipeline {
                 }
             }
         }
-        // ── Stage 4: Rebuild Golden AMI only when image contents change─────────────
+
+        // ── Stage 4: Rebuild Golden AMI only when image contents change ────
         stage('Packer Build') {
             when {
                 anyOf {
@@ -73,7 +75,8 @@ pipeline {
                 archiveArtifacts artifacts: 'devops-course/ami_manifest.json', allowEmptyArchive: true
             }
         }
-        // ── Stage 5: Build and push Docker image ──────────────────────────────
+
+        // ── Stage 5: Build and push Docker image ───────────────────────────
         stage('Docker Build & Push') {
             steps {
                 sh '''
@@ -94,8 +97,10 @@ pipeline {
                 '''
             }
         }
-        // Stage 6: Terraform Test
-        steps {
+
+        // ── Stage 6: Terraform Test ────────────────────────────────────────
+        stage('Terraform Test') {
+            steps {
                 sh '''
                     set -e
 
@@ -114,7 +119,8 @@ pipeline {
                 '''
             }
         }
-        // ── Stage 7: Terraform Plan ─────────────────────────────────────────────
+
+        // ── Stage 7: Terraform Plan ────────────────────────────────────────
         stage('Terraform Plan') {
             steps {
                 sh '''
@@ -132,20 +138,23 @@ pipeline {
                 archiveArtifacts artifacts: 'tfplan.txt'
             }
         }
-        // ── Stage 8: Manual approval before infrastructure change ───────────────
+
+        // ── Stage 8: Manual approval before infrastructure change ──────────
         stage('Approval') {
             steps {
                 input message: 'Review Terraform plan. Proceed with apply?',
                       ok: 'Apply', submitter: 'admin'
             }
         }
-        // ── Stage 9: Terraform Apply ────────────────────────────────────────────
+
+        // ── Stage 9: Terraform Apply ───────────────────────────────────────
         stage('Terraform Apply') {
             steps {
                 sh 'cd /home/ec2-user/NM-FSM-App/devops-course/terraform && terraform workspace select staging && terraform apply -auto-approve tfplan.bin'
             }
         }
-        // Stage 10: Integration Tests
+
+        // ── Stage 10: Integration Tests ────────────────────────────────────
         stage('Integration Tests') {
             steps {
                 withCredentials([string(credentialsId: 'db-password', variable: 'DB_PASS')]) {
@@ -163,7 +172,8 @@ pipeline {
                 }
             }
         }
-        // Stage 11: E2E Playwright Tests
+
+        // ── Stage 11: End-to-End Playwright Tests ──────────────────────────
         stage('E2E Tests') {
             steps {
                 sh '''
@@ -204,7 +214,8 @@ pipeline {
                 '''
             }
         }
-        // ── Stage 12: Manual gate then promote to production workspace ──────────────────────────────
+
+        // ── Stage 12: Manual gate then promote to production workspace ─────
         stage('Promote to Production') {
             steps {
                 input message: 'Staging verified. Promote to production?',
